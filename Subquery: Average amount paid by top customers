@@ -1,0 +1,17 @@
+SELECT AVG(total_amount_paid) AS average
+FROM
+(SELECT SUM(pay.amount) AS total_amount_paid,
+        pay.customer_id,
+        cus.first_name,
+        cus.last_name,
+        cit.city,
+        cou.country
+FROM payment pay
+INNER JOIN customer cus ON pay.customer_id=cus.customer_id
+INNER JOIN address add ON cus.address_id=add.address_id
+INNER JOIN city cit ON add.city_id=cit.city_id
+INNER JOIN country cou ON cit.country_id=cou.country_id
+WHERE cit.city IN ('Aurora', 'Acua', 'Citrus Heughts', 'Iwaki', 'Ambattur', 'Shanwei', 'So Leopoldo', 'Teboksary', 'Tianjin', 'Cianjur')
+GROUP BY pay.amount, pay.customer_id, cus.first_name, cus.last_name, cit.city, cou.country
+ORDER BY total_amount_paid DESC
+LIMIT 5) AS total_amount_paid
