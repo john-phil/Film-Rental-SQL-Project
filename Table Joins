@@ -1,0 +1,10 @@
+/* JOIN query looking to find the top 10 countries by size of their customer base */
+SELECT D.country,
+      COUNT(customer_id
+FROM customer cus
+INNER JOIN address add ON cus.address_id=add.address_id
+INNER JOIN city cit ON add.city_id=cit.city_id
+INNER JOIN country cou ON cit.country_id=cou.country_id
+GROUP BY country
+ORDER BY COUNT (customer_id) DESC
+LIMIT 10
