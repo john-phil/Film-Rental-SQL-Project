@@ -1,0 +1,20 @@
+/*using a CTE to find the same answer to the first subquery shown. simply used to compare cost of the different queries and practice the different types*/
+
+WITH avg_amount_cte (amount, customer_id, first_name, last_name, city, country) AS 
+(SELECT SUM(pay.amount) AS total_amount_paid,
+        pay.customer_id,
+        cus.first_name,
+        cus.last_name,
+        cit.city,
+        cou.country
+FROM payment pay
+INNER JOIN customer cus ON pay.customer_id=cus.customer_id
+INNER JOIN address add ON cus.address_id=add.address_id
+INNER JOIN city cit ON add.city_id=cit.city_id
+INNER JOIN country cou ON cit.country_id=cou.country_id
+WHERE cit.city IN ('Aurora', 'Acua', 'Citrus Heughts', 'Iwaki', 'Ambattur', 'Shanwei', 'So Leopoldo', 'Teboksary', 'Tianjin', 'Cianjur')
+GROUP BY pay.amount, pay.customer_id, cus.first_name, cus.last_name, cit.city, cou.country
+ORDER BY total_amount_paid DESC
+LIMIT 5) 
+SELECT AVG(amount) AS average
+FROM avg_amount_cte
